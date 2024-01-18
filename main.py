@@ -1,5 +1,6 @@
 import streamlit as st
 from openai import OpenAI
+import pandas as pd
 
 st.title("Chat Bot")
 
@@ -15,7 +16,15 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
+file_read = st.file_uploader("")
+if file_read is not None:
+    file = pd.read_csv(file_read)
+    st.write(file)
+
 if prompt := st.chat_input("Nhập yêu cầu?"):
+    if prompt == "Analyse":
+        prompt = file.to_string()
+
     st.session_state.messages.append(
         {
             "role": "user",
